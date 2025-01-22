@@ -3,12 +3,9 @@ import SearchFormReset from "./SearchFormReset";
 import SearchTabs from "./SearchTabs";
 import { Search } from "lucide-react";
 import Form from "next/form";
-import { searchAction } from "@/app/actions";
 
-const SearchForm = async ({ searchParams, activeTab }) => {
+const ServerSearchForm = async ({ activeTab, setActiveTab, searchParams }) => {
     const query = (await searchParams)?.query || '';
-    console.log(query);
-    
 
     const placeholders = {
         rent: "Search Rental Properties",
@@ -18,7 +15,9 @@ const SearchForm = async ({ searchParams, activeTab }) => {
 
     return (
         <div className="w-full max-w-3xl">
-            <Form action="/" scroll={false} className="search-form">
+            <SearchTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            
+            <Form action="/" className="search-form">
                 <input 
                     name="query"
                     defaultValue={query}
@@ -41,4 +40,4 @@ const SearchForm = async ({ searchParams, activeTab }) => {
     );
 };
 
-export default SearchForm;
+export { ServerSearchForm }; 
