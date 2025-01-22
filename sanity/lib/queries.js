@@ -16,6 +16,16 @@ export const LISTINGS_QUERY = defineQuery(`
         "images": image[].asset->url, 
         description, 
         bhk,
-        sqft
+        sqft,
+        views
+    }
+`)
+
+export const USER_BY_GOOGLE_ID = defineQuery(`
+    *[_type=='user' && id == $id][0]{
+        _id, 
+        name, 
+        email, 
+        image
     }
 `)
