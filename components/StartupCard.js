@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 import { EyeIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -31,13 +31,13 @@ const StartupCard = ({post}) =>{
             </div>
             <div className="flex-between mt-5 gap-5">
                 <div>
-                    <Link href={`/user/${post.author._id}`}>
-                        <p className="text-16-medium line-cramp-1">{post.author.name}</p>
+                    <Link href={`/user/${post.user._id}`}>
+                        <p className="text-16-medium line-cramp-1">{post.user.name}</p>
                     </Link>
-                    <Link href={`/startup/${post._id}`}>
+                    <Link href={`/listing/${post._id}`}>
                     <div className="flex-center gap-1">
-                        <h3 className="text-26-semibold line-clamp-1 mb-0">₹{post.price}<span className="text-16-medium"> /month</span></h3>
-                        <p className="text-16-light mt-0">Deposit: ₹{post.deposit}</p>
+                        <h3 className="text-26-semibold line-clamp-1 mb-0">{formatPrice(post.price)}<span className="text-16-medium"> /month</span></h3>
+                        <p className="text-16-light mt-0">Deposit: {formatPrice(post.deposit)}</p>
                     </div>
                     </Link>
                 </div>
@@ -46,9 +46,9 @@ const StartupCard = ({post}) =>{
                     <h3 className="text-26-semibold line-clamp-1 mb-0 mt-6">{post.bhk} BHK</h3>
                     <p className="text-16-light mt-0">{post.sqft} sqft</p>
                 </div>
-                <Link href={`/user/${post.author._id}`}>
+                <Link href={`/user/${post.user._id}`}>
                     <Image 
-                        src={post.author.image}
+                        src={post.user.image}
                         alt="placeholder"
                         width={48}
                         height={48}
@@ -68,7 +68,7 @@ const StartupCard = ({post}) =>{
 
                 <Carousel>
                     <CarouselContent>
-                        {post.image.map((image, index) => (
+                        {post.images.map((image, index) => (
                             <CarouselItem key={index}>
                                 <Image src={image} alt="placeholder" className="rounded-2xl w-full" width={400} height={400} />
                             </CarouselItem>
@@ -85,7 +85,7 @@ const StartupCard = ({post}) =>{
                     <p className="text-16-medium">{post.category}</p>
                 </Link>
 
-                <Link href={`/startup/${post._id}`}>
+                <Link href={`/listing/${post._id}`}>
                     <Button className="startup-card_btn">Details</Button>
                 </Link>
             </div>

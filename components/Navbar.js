@@ -14,7 +14,7 @@ const Navbar = () => {
         <div className="flex items-center gap-5 text-black">
           {session ? (
             <>
-              <Link href="/startup/create">
+              <Link href="/listing/create">
                 <span>Create</span>
               </Link>
               <button onClick={() => signOut()}>Sign Out</button>

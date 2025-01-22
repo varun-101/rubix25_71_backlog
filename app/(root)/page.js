@@ -2,27 +2,31 @@ import SearchForm from "@/components/SearchForm";
 import StartupCard from "@/components/StartupCard";
 import Image from "next/image";
 import SearchContainer from "@/components/SearchContainer";
+import { client } from "@/sanity/lib/client";
+import { LISTINGS_QUERY } from "@/sanity/lib/queries";
 
 export default async function Home({searchParams}) {
   const query = (await searchParams)?.query || null;
   const params = {Search: query}
-  const posts = [{
-    _createdAt: new Date(),
-    _id: '1',
-    price: '50,000',
-    author: {
-      _id: '1',
-      name: 'Varun',
-      image: '/logo.png'
-    },
-    views: 100,
-    deposit: '1,50,000',
-    bhk: '2',
-    sqft: '1000',
-    description: 'This is a test description',
-    category: 'Rent',
-    image: ['/logo.png', '/logo.png', '/logo.png']  
-  }];
+  // const posts = [{
+  //   _createdAt: new Date(),
+  //   _id: '1',
+  //   price: '50,000',
+  //   author: {
+  //     _id: '1',
+  //     name: 'Varun',
+  //     image: '/logo.png'
+  //   },
+  //   views: 100,
+  //   deposit: '1,50,000',
+  //   bhk: '2',
+  //   sqft: '1000',
+  //   description: 'This is a test description',
+  //   category: 'Rent',
+  //   image: ['/logo.png', '/logo.png', '/logo.png']  
+  // }];
+  const posts = await client.fetch(LISTINGS_QUERY)
+  console.log(posts)
   return (
     <>
     <section className="pink_container">
