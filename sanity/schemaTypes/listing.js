@@ -103,6 +103,34 @@ export const listing = defineType({
             title: "Map Image",
             type: "image",
         }),
-
+        defineField({
+            name: 'reviews',
+            title: 'Reviews',
+            type: 'array',
+            of: [{
+                type: 'object',
+                fields: [
+                    {
+                        name: 'user',
+                        type: 'reference',
+                        to: [{ type: 'user' }]
+                    },
+                    {
+                        name: 'rating',
+                        type: 'number',
+                        validation: Rule => Rule.required().min(1).max(5)
+                    },
+                    {
+                        name: 'review',
+                        type: 'text'
+                    },
+                    {
+                        name: 'createdAt',
+                        type: 'datetime',
+                        initialValue: () => new Date().toISOString()
+                    }
+                ]
+            }]
+        }),
     ]
 })

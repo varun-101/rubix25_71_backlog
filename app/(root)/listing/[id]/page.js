@@ -28,11 +28,14 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import ShareButton from "@/components/ShareButton";
-import ShareButton from "@/components/ShareButton";
+import ReviewSection from "@/components/ReviewSection";
+import { auth } from "@/app/api/auth/[...nextauth]/route";
+
 
 const page = async ({params}) => {
     const id = (await params).id;
     const post = await client.fetch(LISTING_BY_ID, {id: id});
+    const session = await auth();
 
     // Format the address for display
     const formattedAddress = post?.address 
@@ -265,6 +268,15 @@ const page = async ({params}) => {
                         </div>
                     </div>
                 )}
+
+                {/* Reviews Section */}
+                <div className="mt-10">
+                    <ReviewSection 
+                        listingId={id}
+                        currentUser={session?.user}
+                        reviews={post.reviews || []}
+                    />
+                </div>
 
                 <hr className="divider"/>
             </section>

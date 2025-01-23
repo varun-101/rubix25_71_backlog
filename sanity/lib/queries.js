@@ -52,6 +52,17 @@ export const LISTING_BY_ID = defineQuery(`
         views,
         configuration,
         furnishing,
+        "reviews": *[_type == "review" && references(^._id)]{
+            _id,
+            rating,
+            review,
+            _createdAt,
+            "user": user->{
+                _id,
+                name,
+                image
+            }
+        },
         location {
             lat,
             lng
