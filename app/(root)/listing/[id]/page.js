@@ -43,12 +43,12 @@ const page = async ({params}) => {
             <section className="pink_container !min-h-[230px]">
                 <div className="items-center gap-2">
                     <p className="tag">Listed on {formatDate(post._createdAt)}</p>
-                    <Badge variant="secondary" className={"tag justify-center mt-2 flex-wrap"}>
+                    {/* <Badge variant="secondary" className={"tag justify-center mt-2 flex-wrap"}>
                         {post.category === 'rent' ? 'For Rent' : post.category === 'sale' ? 'For Sale' : 'Plot/Land'}
-                    </Badge>
+                    </Badge> */}
                 </div>
                 <h1 className="heading">{post.title}</h1>
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-black tag">
                     <MapPin className="h-4 w-4" />
                     <p className="text-lg">{formattedAddress}</p>
                 </div>
@@ -182,16 +182,83 @@ const page = async ({params}) => {
                 {post.mapImageUrl && (
                     <div className="mt-10 space-y-4">
                         <h3 className="text-xl font-semibold">Location</h3>
-                        <div className="relative aspect-[3/2] w-full max-w-5xl mx-auto overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-                            <img
-                                src={post.mapImageUrl}
-                                alt={`Map showing location of ${post.title}`}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                            <MapPin className="h-4 w-4" />
-                            <p>{formattedAddress}</p>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Map on the left */}
+                            <Link href={`https://maps.google.com/?q=${post.location.lat},${post.location.lng}`} target="_blank">
+                                <div className="relative rounded-lg border border-gray-200 shadow-sm">
+                                    <Image
+                                        src={post.mapImageUrl}
+                                        alt={`Map showing location of ${post.title}`}
+                                        width={600}
+                                        height={400}
+                                        className="rounded-lg"
+                                    />
+                                </div>
+                            </Link>
+
+                            {/* Location details on the right */}
+                            <div className="space-y-6">
+                                {/* Basic location info */}
+                                <div className="flex items-start gap-2 text-gray-600">
+                                    <MapPin className="h-5 w-5 mt-1" />
+                                    <div>
+                                        <h4 className="font-semibold text-lg text-black mb-1">Address</h4>
+                                        <p className="text-gray-600">{formattedAddress}</p>
+                                    </div>
+                                </div>
+
+                                {/* Detailed address information */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {post.address.street && (
+                                        <div className="p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-gray-500 text-sm">Street</p>
+                                            <p className="font-medium">{post.address.street}</p>
+                                        </div>
+                                    )}
+                                    {post.address.city && (
+                                        <div className="p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-gray-500 text-sm">City</p>
+                                            <p className="font-medium">{post.address.city}</p>
+                                        </div>
+                                    )}
+                                    {post.address.state && (
+                                        <div className="p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-gray-500 text-sm">State</p>
+                                            <p className="font-medium">{post.address.state}</p>
+                                        </div>
+                                    )}
+                                    {post.address.pincode && (
+                                        <div className="p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-gray-500 text-sm">PIN Code</p>
+                                            <p className="font-medium">{post.address.pincode}</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Coordinates */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-3 bg-gray-50 rounded-lg">
+                                        <p className="text-gray-500 text-sm">Latitude</p>
+                                        <p className="font-medium">{post.location.lat}</p>
+                                    </div>
+                                    <div className="p-3 bg-gray-50 rounded-lg">
+                                        <p className="text-gray-500 text-sm">Longitude</p>
+                                        <p className="font-medium">{post.location.lng}</p>
+                                    </div>
+                                </div>
+
+                                {/* View on Google Maps button */}
+                                <Link 
+                                    href={`https://maps.google.com/?q=${post.location.lat},${post.location.lng}`}
+                                    target="_blank"
+                                    className="inline-block"
+                                >
+                                    <Button variant="outline" className="gap-2">
+                                        View on Google Maps
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 )}
