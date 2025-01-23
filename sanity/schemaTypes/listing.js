@@ -47,7 +47,8 @@ export const listing = defineType({
         defineField({
             name: "bhk",
             title: "BHK",
-            type: "string",
+            type: "number",
+            validation: Rule => Rule.precision(1)
         }),
         defineField({
             name: "sqft",

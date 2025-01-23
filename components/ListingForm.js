@@ -13,7 +13,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-// import { z } from "zod";
+import { createListing } from "@/lib/action";
+import { z } from "zod";
 const ListingForm = () => {
     const [errors, setErrors] = useState({})
     const [selectedImages, setSelectedImages] = useState([]);
@@ -27,21 +28,35 @@ const ListingForm = () => {
                 title: formData.get("title"),
                 description: formData.get("description"),
                 category: formData.get("category"),
-                link: formData.get("link"),
-                pitch                
+                bhk: formData.get("bhk"),
+                sqft: formData.get("sqft"),
+                furnishing: formData.get("furnishing"),
+                configuration: {
+                    bedrooms: formData.get("bedrooms"),
+                    bathrooms: formData.get("bathrooms"),
+                    balconies: formData.get("balconies"),
+                    parking: formData.get("parking")
+                },
+                price: formData.get("price"),
+                images: selectedImages
             }
 
-            await formValidation.parseAsync(formValues);
+            if (formData.get("category") === "rent") {
+                formValues.deposit = formData.get("deposit");
+            }
 
-            const result = await createPitch(prevState,formData, pitch)
+            // TODO: Add validation
+            // await formValidation.parseAsync(formValues);
+
+            const result = await createListing(prevState, formData, formValues)
             console.log(result);
 
             if (result?.status === 'SUCCESS') {
                 toast({
                     title: "SUCCESS",
-                    description: "Your Startup Pitch Has Been Created.",
+                    description: "Your Listing Has Been Created.",
                 });
-                router.push(`/startup/${result._id}`);
+                router.push(`/listing/${result._id}`);
                 router.refresh();
             }
             return result;
@@ -68,9 +83,10 @@ const ListingForm = () => {
 
         }
     }
-    const [state, formAction, isPending] = useActionState(handleFormSubmit,{
+
+    const [state, formAction, isPending] = useActionState(handleFormSubmit, {
         error: '',
-        status : "INITIAL"
+        status: "INITIAL"
     })
 
     const handleImageChange = (e) => {
