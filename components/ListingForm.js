@@ -15,12 +15,18 @@ import {
 } from "@/components/ui/select"
 import { createListing } from "@/lib/action";
 import { z } from "zod";
+import LocationInput from "@/components/LocationInput";
+import { useRouter } from "next/navigation";
+
 const ListingForm = () => {
     const [errors, setErrors] = useState({})
     const [selectedImages, setSelectedImages] = useState([]);
     const [imageError, setImageError] = useState("");
     const [category, setCategory] = useState("");
     const [customBhk, setCustomBhk] = useState(false);
+    const [location, setLocation] = useState(null);
+    const router = useRouter();
+
 
     const handleFormSubmit = async (prevState, formData) => {
         try {
@@ -38,7 +44,8 @@ const ListingForm = () => {
                     parking: formData.get("parking")
                 },
                 price: formData.get("price"),
-                images: selectedImages
+                images: selectedImages,
+                location: location
             }
 
             if (formData.get("category") === "rent") {
@@ -49,9 +56,11 @@ const ListingForm = () => {
             // await formValidation.parseAsync(formValues);
 
             const result = await createListing(prevState, formData, formValues)
-            console.log(result);
+            // console.log(result);
 
             if (result?.status === 'SUCCESS') {
+                console.log(result);
+                
                 toast({
                     title: "SUCCESS",
                     description: "Your Listing Has Been Created.",
@@ -159,6 +168,19 @@ const ListingForm = () => {
                     </SelectContent>
                 </Select>
                 {errors.category && <p className="startup-form_error">{errors.category}</p>}
+            </div>
+
+            <div>
+                <label htmlFor="location" className="startup-form_label">
+                    Location
+                </label>
+                <LocationInput 
+                    value={location}
+                    onChange={(locationDetails) => {
+                        setLocation(locationDetails);
+                    }}
+                />
+                {errors.location && <p className="startup-form_error">{errors.location}</p>}
             </div>
 
             {category === "rent" && (

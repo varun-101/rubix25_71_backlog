@@ -56,7 +56,7 @@ const authOptions = {
             session.user._id = token._id;
             session.user.id = token.id;
             
-            console.log("Final session:", session); // Debug log
+            // console.log("Final session:", session); // Debug log
             return session;
         }
     }

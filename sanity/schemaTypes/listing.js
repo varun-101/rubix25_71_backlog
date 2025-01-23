@@ -81,5 +81,28 @@ export const listing = defineType({
                 {name: "parking", type: "number", title: "Parking Spots"},
             ]
         }),
-    ],
+        defineField({
+            name: "location",
+            title: "Location",
+            type: "geopoint",
+        }),
+        defineField({
+            name: "address",
+            title: "Address",
+            type: "object",
+            fields: [
+                {name: "street", type: "string", title: "Street"},
+                {name: "city", type: "string", title: "City"},
+                {name: "state", type: "string", title: "State"},
+                {name: "country", type: "string", title: "Country"},
+                {name: "pincode", type: "string", title: "Pincode"},
+            ]
+        }),
+        defineField({
+            name: "mapImageUrl",
+            title: "Map Image",
+            type: "image",
+        }),
+
+    ]
 })
