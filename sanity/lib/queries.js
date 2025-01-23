@@ -72,3 +72,35 @@ export const VIEW_COUNT = defineQuery(`
         views
     }
 `)
+
+export const USER_BY_ID = defineQuery(`
+    *[_type=='user' && _id == $id][0]{
+        id, 
+        name, 
+        email, 
+        image
+    }
+`)
+
+export const LISTINGS_BY_USER = defineQuery(`
+    *[_type=='listing' && user->_id == $id] | order(views desc){
+        _id, 
+        _createdAt, 
+        price, 
+        title, 
+        user ->{
+            _id, 
+            name, 
+            image
+        },
+        category, 
+        deposit, 
+        "images": image[].asset->url, 
+        description, 
+        bhk,
+        sqft,
+        views
+    }
+`)
+
+

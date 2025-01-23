@@ -18,7 +18,7 @@ const Navbar = () => {
                 <span>Create</span>
               </Link>
               <button onClick={() => signOut()}>Sign Out</button>
-              <Link href={`/user/${session.user.id}`}>
+              <Link href={`/user/${session.user._id}`}>
                 <span>{session.user.name}</span>
               </Link>
             </>

@@ -14,41 +14,42 @@ import {
   } from "@/components/ui/carousel"
   
 
-const StartupCard = ({post}) =>{
-    
+const StartupCard = async ({post}) =>{
+    const posts = await post;
+    console.log("post", post);
 
 
     return (
         <li className="startup-card group">
             <div className="flex-between">
                 <p>
-                    {formatDate(post._createdAt)}
+                    {formatDate(posts._createdAt)}
                 </p>
                 <div className="flex gap-1.5">
                     <EyeIcon className="size-6 text-primary"/>
-                    <span className="text-16-medium">{post.views}</span>
+                    <span className="text-16-medium">{posts.views}</span>
                 </div>
             </div>
             <div className="flex-between mt-5 gap-5">
                 <div>
-                    <Link href={`/user/${post.user._id}`}>
-                        <p className="text-16-medium line-cramp-1">{post.user.name}</p>
+                    <Link href={`/user/${posts.user._id}`}>
+                        <p className="text-16-medium line-cramp-1">{posts.user.name}</p>
                     </Link>
-                    <Link href={`/listing/${post._id}`}>
+                    <Link href={`/listing/${posts._id}`}>
                     <div className="flex-center gap-1">
-                        <h3 className="text-26-semibold line-clamp-1 mb-0">{formatPrice(post.price)}<span className="text-16-medium"> /month</span></h3>
-                        <p className="text-16-light mt-0">Deposit: {formatPrice(post.deposit)}</p>
+                        <h3 className="text-26-semibold line-clamp-1 mb-0">{formatPrice(posts.price)}<span className="text-16-medium"> /month</span></h3>
+                        <p className="text-16-light mt-0">Deposit: {formatPrice(posts.deposit)}</p>
                     </div>
                     </Link>
                 </div>
                 <div className="h-16 w-[2px] bg-black/15 rounded-full" />
                 <div>
-                    <h3 className="text-26-semibold line-clamp-1 mb-0 mt-6">{post.bhk} BHK</h3>
-                    <p className="text-16-light mt-0">{post.sqft} sqft</p>
+                    <h3 className="text-26-semibold line-clamp-1 mb-0 mt-6">{posts.bhk} BHK</h3>
+                    <p className="text-16-light mt-0">{posts.sqft} sqft</p>
                 </div>
-                <Link href={`/user/${post.user._id}`}>
+                <Link href={`/user/${posts.user._id}`}>
                     <Image 
-                        src={post.user.image}
+                        src={posts.user.image}
                         alt="placeholder"
                         width={48}
                         height={48}
@@ -58,7 +59,7 @@ const StartupCard = ({post}) =>{
             </div>
             
             {/* <Link href={`/startup/${post._id}`}> */}
-                <p className="startup-card_desc">{post.description}</p>
+                <p className="startup-card_desc">{posts.description}</p>
 
                 {/* <img 
                     src={post.image}
@@ -68,7 +69,7 @@ const StartupCard = ({post}) =>{
 
                 <Carousel>
                     <CarouselContent>
-                        {post.images.map((image, index) => (
+                        {posts.images.map((image, index) => (
                             <CarouselItem key={index}>
                                 <Image src={image} alt="placeholder" className="rounded-2xl w-full" width={400} height={400} />
                             </CarouselItem>
@@ -81,11 +82,11 @@ const StartupCard = ({post}) =>{
             {/* </Link> */}
 
             <div className="flex-between mt-3">
-                <Link href={`/?query=${post.category.toLowerCase()}`}>
-                    <p className="text-16-medium">{post.category}</p>
-                </Link>
+                <Link href={`/?query=${posts.category.toLowerCase()}`}>
+                        <p className="text-16-medium">{posts.category}</p>
+                    </Link>
 
-                <Link href={`/listing/${post._id}`}>
+                <Link href={`/listing/${posts._id}`}>
                     <Button className="startup-card_btn">Details</Button>
                 </Link>
             </div>
