@@ -24,9 +24,11 @@ const StartupCard = async ({post}) =>{
             <div className="flex-between">
                 <p>
                     {formatDate(posts._createdAt)}
+                    {formatDate(posts._createdAt)}
                 </p>
                 <div className="flex gap-1.5">
                     <EyeIcon className="size-6 text-primary"/>
+                    <span className="text-16-medium">{posts.views}</span>
                     <span className="text-16-medium">{posts.views}</span>
                 </div>
             </div>
@@ -34,9 +36,14 @@ const StartupCard = async ({post}) =>{
                 <div>
                     <Link href={`/user/${posts.user._id}`}>
                         <p className="text-16-medium line-cramp-1">{posts.user.name}</p>
+                    <Link href={`/user/${posts.user._id}`}>
+                        <p className="text-16-medium line-cramp-1">{posts.user.name}</p>
                     </Link>
                     <Link href={`/listing/${posts._id}`}>
+                    <Link href={`/listing/${posts._id}`}>
                     <div className="flex-center gap-1">
+                        <h3 className="text-26-semibold line-clamp-1 mb-0">{formatPrice(posts.price)}<span className="text-16-medium"> /month</span></h3>
+                        <p className="text-16-light mt-0">Deposit: {formatPrice(posts.deposit)}</p>
                         <h3 className="text-26-semibold line-clamp-1 mb-0">{formatPrice(posts.price)}<span className="text-16-medium"> /month</span></h3>
                         <p className="text-16-light mt-0">Deposit: {formatPrice(posts.deposit)}</p>
                     </div>
@@ -46,9 +53,13 @@ const StartupCard = async ({post}) =>{
                 <div>
                     <h3 className="text-26-semibold line-clamp-1 mb-0 mt-6">{posts.bhk} BHK</h3>
                     <p className="text-16-light mt-0">{posts.sqft} sqft</p>
+                    <h3 className="text-26-semibold line-clamp-1 mb-0 mt-6">{posts.bhk} BHK</h3>
+                    <p className="text-16-light mt-0">{posts.sqft} sqft</p>
                 </div>
                 <Link href={`/user/${posts.user._id}`}>
+                <Link href={`/user/${posts.user._id}`}>
                     <Image 
+                        src={posts.user.image}
                         src={posts.user.image}
                         alt="placeholder"
                         width={48}
@@ -60,6 +71,7 @@ const StartupCard = async ({post}) =>{
             
             {/* <Link href={`/startup/${post._id}`}> */}
                 <p className="startup-card_desc">{posts.description}</p>
+                <p className="startup-card_desc">{posts.description}</p>
 
                 {/* <img 
                     src={post.image}
@@ -69,6 +81,7 @@ const StartupCard = async ({post}) =>{
 
                 <Carousel>
                     <CarouselContent>
+                        {posts.images.map((image, index) => (
                         {posts.images.map((image, index) => (
                             <CarouselItem key={index}>
                                 <div className="relative aspect-video w-full">
@@ -94,6 +107,7 @@ const StartupCard = async ({post}) =>{
                         <p className="text-16-medium uppercase">{posts.category}</p>
                     </Link>
 
+                <Link href={`/listing/${posts._id}`}>
                 <Link href={`/listing/${posts._id}`}>
                     <Button className="startup-card_btn">Details</Button>
                 </Link>

@@ -28,6 +28,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import ShareButton from "@/components/ShareButton";
+import ShareButton from "@/components/ShareButton";
 
 const page = async ({params}) => {
     const id = (await params).id;
@@ -98,6 +99,7 @@ const page = async ({params}) => {
                                     </div>
                                 )}
                             </div>
+                            <ShareButton />
                             <ShareButton />
                         </div>
 
