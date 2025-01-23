@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.1.5",
     "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-toast": "^1.2.5",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.71.1",
     "@tailwindcss/typography": "^0.5.16",

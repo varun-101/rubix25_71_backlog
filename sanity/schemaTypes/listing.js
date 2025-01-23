@@ -21,7 +21,7 @@ export const listing = defineType({
         defineField({
             name: "price",
             title: "Price",
-            type: "string",
+            type: "number",
         }),
         defineField({
             name: "user",
@@ -35,8 +35,8 @@ export const listing = defineType({
         }),
         defineField({
             name: "deposit",
-            title: "Deposit",
-            type: "string",
+            title: "Security Deposit",
+            type: "number",
         }),
         defineField({
             name: "image",
@@ -51,8 +51,8 @@ export const listing = defineType({
         }),
         defineField({
             name: "sqft",
-            title: "Sqft",
-            type: "string",
+            title: "Area (sq.ft)",
+            type: "number",
         }),
         defineField({
             name: "description",
@@ -63,6 +63,22 @@ export const listing = defineType({
             name: "category",
             title: "Category",
             type: "string",
+        }),
+        defineField({
+            name: "furnishing",
+            title: "Furnishing Status",
+            type: "string",
+        }),
+        defineField({
+            name: "configuration",
+            title: "Configuration",
+            type: "object",
+            fields: [
+                {name: "bedrooms", type: "number", title: "Bedrooms"},
+                {name: "bathrooms", type: "number", title: "Bathrooms"},
+                {name: "balconies", type: "number", title: "Balconies"},
+                {name: "parking", type: "number", title: "Parking Spots"},
+            ]
         }),
     ],
 })
