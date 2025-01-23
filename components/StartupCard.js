@@ -16,7 +16,7 @@ import {
 
 const StartupCard = async ({post}) =>{
     const posts = await post;
-    console.log("post", post);
+    // console.log("post", post);
 
 
     return (
@@ -71,19 +71,27 @@ const StartupCard = async ({post}) =>{
                     <CarouselContent>
                         {posts.images.map((image, index) => (
                             <CarouselItem key={index}>
-                                <Image src={image} alt="placeholder" className="rounded-2xl w-full" width={400} height={400} />
+                                <div className="relative aspect-video w-full">
+                                    <Image 
+                                        src={image} 
+                                        alt="placeholder" 
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="rounded-2xl object-cover" 
+                                    />
+                                </div>
                             </CarouselItem>
                         ))}
                     </CarouselContent>
-                    <CarouselPrevious className="absolute mt-0 left-0" />
-                    <CarouselNext className="absolute mt-0 right-0" />
+                    <CarouselPrevious className="absolute mt-0 left-0 bg-black text-white" />
+                    <CarouselNext className="absolute mt-0 right-0 bg-black text-white" />
                 </Carousel>
 
             {/* </Link> */}
 
             <div className="flex-between mt-3">
                 <Link href={`/?query=${posts.category.toLowerCase()}`}>
-                        <p className="text-16-medium">{posts.category}</p>
+                        <p className="text-16-medium uppercase">{posts.category}</p>
                     </Link>
 
                 <Link href={`/listing/${posts._id}`}>

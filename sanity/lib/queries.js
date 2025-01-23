@@ -39,7 +39,8 @@ export const LISTING_BY_ID = defineQuery(`
         user ->{
             _id, 
             name, 
-            image
+            image,
+            email
         },
         category, 
         deposit, 
@@ -75,10 +76,17 @@ export const VIEW_COUNT = defineQuery(`
 
 export const USER_BY_ID = defineQuery(`
     *[_type=='user' && _id == $id][0]{
+        _id,
         id, 
         name, 
         email, 
-        image
+        image,
+        annualIncome,
+        ownsHouse,
+        category,
+        disability,
+        currentHousingType,
+        location
     }
 `)
 

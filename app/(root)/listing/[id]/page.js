@@ -165,14 +165,16 @@ const page = async ({params}) => {
                                 />
                                 <div>
                                     <h3 className="font-semibold">{post.user.name}</h3>
-                                    <p className="text-gray-500">@{post.user.email}</p>
+                                    <p className="text-gray-500">{post.user.email}</p>
                                 </div>
                             </Link>
                             <Button className="w-full mb-3">Contact Owner</Button>
-                            <Button variant="outline" className="w-full">
-                                View Profile
-                                <ArrowRight className="h-4 w-4 ml-2" />
-                            </Button>
+                            <Link href={`/user/${post.user._id}`}>
+                                <Button variant="outline" className="w-full">
+                                    View Profile
+                                    <ArrowRight className="h-4 w-4 ml-2" />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>

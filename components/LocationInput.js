@@ -29,7 +29,7 @@ const LocationInput = ({ value, onChange }) => {
                 
                 const data = await response.json();
 
-                console.log(data);
+                // console.log(data);
 
                 if (!data.results || data.results.length === 0) {
                     setLocations([]);

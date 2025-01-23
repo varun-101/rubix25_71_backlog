@@ -59,7 +59,7 @@ const ListingForm = () => {
             // console.log(result);
 
             if (result?.status === 'SUCCESS') {
-                console.log(result);
+                // console.log(result);
                 
                 toast({
                     title: "SUCCESS",

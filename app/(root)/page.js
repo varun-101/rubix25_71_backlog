@@ -26,7 +26,7 @@ export default async function Home({searchParams}) {
   //   image: ['/logo.png', '/logo.png', '/logo.png']  
   // }];
   const posts = await client.fetch(LISTINGS_QUERY)
-  console.log(posts)
+  // console.log(posts)
   return (
     <>
     <section className="pink_container">

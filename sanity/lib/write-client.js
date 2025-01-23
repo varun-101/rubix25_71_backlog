@@ -10,6 +10,6 @@ export const writeClient = createClient({
   useCdn: false,
 })
 
-if(!writeClient.config().token){
-  throw new Error("Missing write token");
+if (!writeClient.config().token) {
+  throw new Error("Missing write token")
 } 
