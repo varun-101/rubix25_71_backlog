@@ -27,6 +27,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import ShareButton from "@/components/ShareButton";
 
 const page = async ({params}) => {
     const id = (await params).id;
@@ -97,9 +98,7 @@ const page = async ({params}) => {
                                     </div>
                                 )}
                             </div>
-                            <Button variant="outline" size="icon">
-                                <Share2 className="h-4 w-4" />
-                            </Button>
+                            <ShareButton />
                         </div>
 
                         {/* Property Configuration */}
@@ -166,7 +165,7 @@ const page = async ({params}) => {
                                 />
                                 <div>
                                     <h3 className="font-semibold">{post.user.name}</h3>
-                                    <p className="text-gray-500">@{post.user.username}</p>
+                                    <p className="text-gray-500">@{post.user.email}</p>
                                 </div>
                             </Link>
                             <Button className="w-full mb-3">Contact Owner</Button>
