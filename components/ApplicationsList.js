@@ -35,7 +35,7 @@ const ApplicationsList = ({ applications, listingId }) => {
         return applications.filter(app => app.status === status);
     };
 
-    const handleStatusUpdate = async (applicationId, newStatus) => {
+    const handleStatusUpdate = async (applicationId, newStatus) => { 
         try {
             const response = await fetch('/api/applications', {
                 method: 'PATCH',
