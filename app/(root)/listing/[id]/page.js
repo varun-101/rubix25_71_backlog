@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";
@@ -17,7 +17,12 @@ import {
     MapPin, 
     Share2,
     ArrowRight,
-    Building2
+    Building2,
+    Store,
+    ShoppingBag,
+    Utensils,
+    ChevronDown,
+    ChevronUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -30,13 +35,36 @@ import {
 import ShareButton from "@/components/ShareButton";
 import ReviewSection from "@/components/ReviewSection";
 import { auth } from "@/app/api/auth/[...nextauth]/route";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs";
+import NearbyPlacesSection from "@/components/NearbyPlacesSection";
 
+const INITIAL_DISPLAY_COUNT = 6;
+const CATEGORIES = [
+    { id: 'all', label: 'All' },
+    { id: 'shopping', label: 'Shopping' },
+    { id: 'restaurants', label: 'Restaurants' },
+    { id: 'transport', label: 'Transport' },
+    { id: 'education', label: 'Education', className: 'hidden lg:block' },
+    { id: 'healthcare', label: 'Healthcare', className: 'hidden lg:block' }
+];
 
 const page = async ({params}) => {
     const id = (await params).id;
     const post = await client.fetch(LISTING_BY_ID, {id: id});
     const session = await auth();
-
+    console.log("post.nearbyPlaces", post.nearbyPlaces);
     // Format the address for display
     const formattedAddress = post?.address 
         ? `${post.address.street ? post.address.street + ', ' : ''}${post.address.city ? post.address.city + ', ' : ''}${post.address.state || ''}`
@@ -269,6 +297,13 @@ const page = async ({params}) => {
                     </div>
                 )}
 
+                {/* Nearby Places Section */}
+                {post.nearbyPlaces && post.nearbyPlaces.length > 0 && (
+                    <Suspense fallback={<div>Loading nearby places...</div>}>
+                        <NearbyPlacesSection places={post.nearbyPlaces} />
+                    </Suspense>
+                )}
+
                 {/* Reviews Section */}
                 <div className="mt-10">
                     <ReviewSection 
@@ -288,5 +323,23 @@ const page = async ({params}) => {
         </>
     )
 }
+
+// Helper function to get the appropriate icon for each category
+const getCategoryIcon = (category) => {
+    const categoryLower = category.toLowerCase();
+    if (categoryLower.includes('shop') || categoryLower.includes('store')) {
+        return <Store className="h-5 w-5 text-blue-500" />;
+    }
+    if (categoryLower.includes('mall')) {
+        return <ShoppingBag className="h-5 w-5 text-purple-500" />;
+    }
+    if (categoryLower.includes('restaurant') || categoryLower.includes('food')) {
+        return <Utensils className="h-5 w-5 text-orange-500" />;
+    }
+    if (categoryLower.includes('transport') || categoryLower.includes('station')) {
+        return <Car className="h-5 w-5 text-green-500" />;
+    }
+    return <Building2 className="h-5 w-5 text-gray-500" />;
+};
 
 export default page;

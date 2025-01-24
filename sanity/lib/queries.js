@@ -51,6 +51,7 @@ export const LISTING_BY_ID = defineQuery(`
         "mapImageUrl": mapImageUrl.asset->url,
         views,
         configuration,
+        nearbyPlaces,
         furnishing,
         "reviews": *[_type == "review" && references(^._id)]{
             _id,

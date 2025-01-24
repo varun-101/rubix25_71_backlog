@@ -104,6 +104,17 @@ export const listing = defineType({
             type: "image",
         }),
         defineField({
+            name: "nearbyPlaces",
+            title: "Nearby Places",
+            type: "array",
+            of: [{type: "object", fields: [
+                {name: "name", type: "string", title: "Name"},
+                {name: "address", type: "string", title: "Address"},
+                {name: "distance", type: "number", title: "Distance"},
+                {name: "category", type: "string", title: "Category"},
+            ]}]
+        }),
+        defineField({
             name: 'reviews',
             title: 'Reviews',
             type: 'array',
