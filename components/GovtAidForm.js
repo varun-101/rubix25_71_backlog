@@ -77,23 +77,108 @@ const GovtAidForm = ({ user }) => {
 
     const checkEligibility = useCallback(() => {
         const schemes = [];
-
-        if (formData.annualIncome <= 300000 && 
-            !formData.ownsHouse && 
-            formData.location === 'rural') {
+        const data = {
+            annualIncome: formData.annualIncome || user.annualIncome,
+            ownsHouse: formData.ownsHouse || user.ownsHouse,
+            category: formData.category || user.category,
+            disability: formData.disability || user.disability,
+            currentHousingType: formData.currentHousingType || user.currentHousingType,
+            location: formData.location || user.location,
+            age: user.age || 25, // Assuming default age if not provided
+        }
+    
+        // Pradhan Mantri Gramin Awas Yojana (PMGAY)
+        if (data.annualIncome <= 300000 && 
+            !data.ownsHouse && 
+            data.location === 'rural' &&
+            data.age >= 18) {
             schemes.push({
                 name: 'Pradhan Mantri Gramin Awas Yojana (PMGAY)',
-                priority: formData.category !== 'general' || formData.disability || formData.currentHousingType === 'kutcha'
+                priority: data.category !== 'general' || data.disability || data.currentHousingType === 'kutcha',
+                eligibilityCriteria: [
+                    'Annual income up to ₹3 lakhs',
+                    'No permanent house',
+                    'Rural location',
+                    'Age 18 and above'
+                ],
+                link: 'https://pmaymis.gov.in/'
             });
         }
-
-        if (!formData.ownsHouse && formData.annualIncome <= 1800000) {
+    
+        // Pradhan Mantri Awas Yojana (PMAY)
+        const incomeCategory = getIncomeCategory(data.annualIncome);
+        if (!data.ownsHouse && data.age >= 18 && 
+            (incomeCategory === 'EWS' || 
+             incomeCategory === 'LIG' || 
+             incomeCategory === 'MIG-I' || 
+             incomeCategory === 'MIG-II')) {
             schemes.push({
                 name: 'Pradhan Mantri Awas Yojana (PMAY)',
-                category: getIncomeCategory(formData.annualIncome)
+                category: incomeCategory,
+                eligibilityCriteria: [
+                    `Income Category: ${incomeCategory}`,
+                    'No permanent house',
+                    'Age 18 and above',
+                    'Priority for female ownership'
+                ],
+                link: 'https://pmaymis.gov.in/'
             });
         }
-
+    
+        // Credit-Linked Subsidy Scheme (CLSS)
+        if (!data.ownsHouse && data.age >= 18 && 
+            (incomeCategory === 'EWS' || 
+             incomeCategory === 'LIG' || 
+             incomeCategory === 'MIG-I' || 
+             incomeCategory === 'MIG-II')) {
+            schemes.push({
+                name: 'Credit-Linked Subsidy Scheme (CLSS)',
+                category: incomeCategory,
+                eligibilityCriteria: [
+                    `Income Category: ${incomeCategory}`,
+                    'No permanent house',
+                    'Age 18 and above',
+                    'Priority for female ownership'
+                ],
+                link: 'https://pmaymis.gov.in/open/clss.html'
+            });
+        }
+    
+        // Affordable Housing Fund (AHF)
+        if (!data.ownsHouse && data.age >= 18 && 
+            (incomeCategory === 'EWS' || 
+             incomeCategory === 'LIG' || 
+             incomeCategory === 'MIG-I' || 
+             incomeCategory === 'MIG-II')) {
+            schemes.push({
+                name: 'Affordable Housing Fund (AHF)',
+                category: incomeCategory,
+                eligibilityCriteria: [
+                    `Income Category: ${incomeCategory}`,
+                    'No permanent house',
+                    'Age 18 and above',
+                    'Priority for female ownership'
+                ]
+            });
+        }
+    
+        // Rajiv Awas Yojana
+        if (data.annualIncome <= 600000 && 
+            !data.ownsHouse && 
+            data.age >= 18) {
+            schemes.push({
+                name: 'Rajiv Awas Yojana',
+                priority: data.category !== 'general' || data.disability,
+                eligibilityCriteria: [
+                    'Annual income up to ₹6 lakhs',
+                    'No permanent house',
+                    'Age 18 and above',
+                    'Priority for homeless, slum dwellers, and vulnerable communities'
+                ],
+                link: 'https://ashraya.karnataka.gov.in/index.aspx'
+            });
+        }
+    
         setEligibleSchemes(schemes);
         
         toast({
@@ -103,7 +188,7 @@ const GovtAidForm = ({ user }) => {
                 : "No eligible schemes found based on current criteria",
             className: "bg-white border border-gray-200",
         });
-    }, [formData, getIncomeCategory, toast]);
+    }, [formData, getIncomeCategory, toast, user]);
 
     const handleInputChange = useCallback((field, value) => {
         setFormData(prev => ({
@@ -113,7 +198,11 @@ const GovtAidForm = ({ user }) => {
     }, []);
 
     const hasSavedInfo = user.annualIncome || user.category || user.currentHousingType || user.location;
-    // console.log("user", user);
+    useEffect(() => {
+        if (hasSavedInfo && !isEditing) {
+            checkEligibility();
+        }
+    }, [user, isEditing]);
     
     return (
         <div className="space-y-6">
@@ -302,13 +391,21 @@ const GovtAidForm = ({ user }) => {
                     <h3 className="text-lg font-semibold">Eligible Schemes</h3>
                     <div className="space-y-4">
                         {eligibleSchemes.map((scheme, index) => (
-                            <div key={`scheme-${index}`} className="p-4 bg-gray-50 rounded-lg">
+                            <div key={`scheme-${index}`} className="p-4 bg-gray-50 rounded-lg flex justify-between">
+                            <div>
                                 <h4 className="font-medium">{scheme.name}</h4>
                                 {scheme.category && (
                                     <p className="text-sm text-gray-600">Category: {scheme.category}</p>
                                 )}
                                 {scheme.priority && (
                                     <p className="text-sm text-green-600">You may have priority status</p>
+                                )}
+                            </div>
+
+                                {scheme.link && (
+                                    <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 mt-2">
+                                        Learn More
+                                    </a>
                                 )}
                             </div>
                         ))}

@@ -201,7 +201,15 @@ const page = async ({params}) => {
                                     <p className="text-gray-500">{post.user.email}</p>
                                 </div>
                             </Link>
-                            <Button className="w-full mb-3">Contact Owner</Button>
+                            {session?.user?._id === post.user._id ? (
+                                <Link href={`/listing/${id}/applications`}>
+                                    <Button className="w-full mb-3">View Applications</Button>
+                                </Link>
+                            ) : (
+                                <Link href={`/user/${post.user._id}`}>
+                                    <Button className="w-full mb-3">Apply Now</Button>
+                                </Link>
+                            )}
                             <Link href={`/user/${post.user._id}`}>
                                 <Button variant="outline" className="w-full">
                                     View Profile

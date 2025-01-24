@@ -1,14 +1,12 @@
-import React from "react";
+"use client";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import SearchFormReset from "./SearchFormReset";
-import SearchTabs from "./SearchTabs";
 import { Search } from "lucide-react";
-import Form from "next/form";
-import { searchAction } from "@/app/actions";
 
-const SearchForm = async ({ searchParams, activeTab }) => {
-    const query = (await searchParams)?.query || '';
-    console.log(query);
-    
+const SearchForm = ({ initialSearchParams, activeTab }) => {
+    const router = useRouter();
+    const [query, setQuery] = useState(initialSearchParams?.query || "");
 
     const placeholders = {
         rent: "Search Rental Properties",
@@ -16,28 +14,48 @@ const SearchForm = async ({ searchParams, activeTab }) => {
         plots: "Search Plots and Land"
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const params = new URLSearchParams();
+        if (query) params.set("query", query);
+        params.set("category", activeTab);
+        router.push(`/?${params.toString()}`);
+    };
+
+    // Update search when tab changes
+    useEffect(() => {
+        const params = new URLSearchParams();
+        if (query) params.set("query", query);
+        params.set("category", activeTab);
+        router.push(`/?${params.toString()}`);
+    }, [activeTab]);
+
     return (
-        <div className="w-full max-w-3xl">
-            <Form action="/" scroll={false} className="search-form">
-                <input 
-                    name="query"
-                    defaultValue={query}
-                    className="search-input"
-                    placeholder={placeholders[activeTab]}
-                />
-                <input 
-                    type="hidden" 
-                    name="type" 
-                    value={activeTab}
-                />
-                <div className="flex gap-2">
-                    {query && <SearchFormReset />}
-                    <button type="submit" className="search-btn text-white">
-                        <Search className="size-5"/>
-                    </button>
-                </div>
-            </Form>
-        </div>
+        <form onSubmit={handleSubmit} className="search-form">
+            <input 
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="search-input"
+                placeholder={placeholders[activeTab]}
+            />
+            <input 
+                type="hidden" 
+                name="category" 
+                value={activeTab}
+            />
+            <div className="flex gap-2">
+                {query && (
+                    <SearchFormReset 
+                        onClick={() => setQuery("")} 
+                        activeTab={activeTab}
+                    />
+                )}
+                <button type="submit" className="search-btn text-white">
+                    <Search className="size-5"/>
+                </button>
+            </div>
+        </form>
     );
 };
 

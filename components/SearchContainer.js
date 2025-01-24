@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import SearchForm from "./SearchForm";
 import SearchTabs from "./SearchTabs";
 
-const SearchContainer = ({ searchParams }) => {
+// This component handles only client-side state and UI interactions
+const SearchContainer = ({ initialSearchParams }) => {
     const [activeTab, setActiveTab] = useState('rent');
 
     return (
         <div className="w-full max-w-3xl">
             <SearchTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-            <SearchForm searchParams={searchParams} activeTab={activeTab} />
+            <SearchForm initialSearchParams={initialSearchParams} activeTab={activeTab} />
         </div>
     );
 };

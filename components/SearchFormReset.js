@@ -1,24 +1,26 @@
 "use client";
-import Link from "next/link";
-import React from "react";
-import {X} from "lucide-react"
+import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 
-const SearchFormReset = () =>{
-    const reset = () =>{
-        const form = document.querySelector('.search-form')
-        if (form) {
-            form.reset();
-        }
-    }
+const SearchFormReset = ({ onClick, activeTab }) => {
+    const router = useRouter();
+
+    const handleReset = () => {
+        // Call the parent's reset function to clear the input
+        onClick();
+        // Reset the URL while maintaining the active tab
+        router.push(`/?category=${activeTab}`);
+    };
+
     return (
-        <>
-            <button type="reset" onClick={reset}>
-                <Link href="/" className="search-btn text-white">
-                    <X className="size-5" />
-                </Link>
-            </button>
-        </>
-    )
-}
+        <button 
+            type="button" 
+            onClick={handleReset}
+            className="search-btn text-white"
+        >
+            <X className="size-5" />
+        </button>
+    );
+};
 
-export default SearchFormReset
+export default SearchFormReset;

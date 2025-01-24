@@ -1,7 +1,7 @@
 import { defineQuery } from "next-sanity";
 
 export const LISTINGS_QUERY = defineQuery(`
-    *[_type=='listing'] | order(views desc){
+    *[_type=='listing' && category == $category && ($query == null || (title match $query || description match $query || address.city match $query || address.state match $query || address.country match $query || address.pincode match $query || address.street match $query ))] | order(views desc){
         _id, 
         _createdAt, 
         price, 
