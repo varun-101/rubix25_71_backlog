@@ -49,6 +49,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs";
 import NearbyPlacesSection from "@/components/NearbyPlacesSection";
+import ApplicationForm from "@/components/ApplicationForm";
 
 const INITIAL_DISPLAY_COUNT = 6;
 const CATEGORIES = [
@@ -131,7 +132,6 @@ const page = async ({params}) => {
                                 )}
                             </div>
                             <ShareButton />
-                            <ShareButton />
                         </div>
 
                         {/* Property Configuration */}
@@ -205,9 +205,11 @@ const page = async ({params}) => {
                                 <Link href={`/listing/${id}/applications`}>
                                     <Button className="w-full mb-3">View Applications</Button>
                                 </Link>
+                            ) : session?.user ? (
+                                <ApplicationForm listingId={id} userId={session.user._id} />
                             ) : (
-                                <Link href={`/user/${post.user._id}`}>
-                                    <Button className="w-full mb-3">Apply Now</Button>
+                                <Link href="/sign-in">
+                                    <Button className="w-full mb-3">Sign in to Apply</Button>
                                 </Link>
                             )}
                             <Link href={`/user/${post.user._id}`}>

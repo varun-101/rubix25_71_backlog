@@ -39,10 +39,11 @@ export const listing = defineType({
             type: "number",
         }),
         defineField({
-            name: "image",
-            title: "Image",
+            name: "images",
+            title: "Images",
             type: "array",
-            of: [{type: "image"}],
+            of: [{ type: 'image' }],
+            validation: Rule => Rule.required().min(2).max(10)
         }),
         defineField({
             name: "bhk",
