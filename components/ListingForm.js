@@ -17,6 +17,7 @@ import { createListing } from "@/lib/action";
 import { z } from "zod";
 import LocationInput from "@/components/LocationInput";
 import { useRouter } from "next/navigation";
+import PricePrediction from "@/components/PricePrediction";
 
 const ListingForm = () => {
     const [errors, setErrors] = useState({})
@@ -26,7 +27,13 @@ const ListingForm = () => {
     const [customBhk, setCustomBhk] = useState(false);
     const [location, setLocation] = useState(null);
     const router = useRouter();
-
+    const [formValues, setFormValues] = useState({
+        sqft: '',
+        bhk: '',
+        bedrooms: '',
+        bathrooms: '',
+        furnishing: '',
+    });
 
     const handleFormSubmit = async (prevState, formData) => {
         try {
@@ -115,6 +122,13 @@ const ListingForm = () => {
         setSelectedImages(files);
     };
 
+    const handleFormValueChange = (field, value) => {
+        setFormValues(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
     return (
         <>
             <form action={formAction} className="startup-form">
@@ -163,7 +177,7 @@ const ListingForm = () => {
                     </SelectTrigger>
                     <SelectContent className="bg-white">
                         <SelectItem value="rent">For Rent</SelectItem>
-                        <SelectItem value="sale">For Sale</SelectItem>
+                        <SelectItem value="buy">For Sale</SelectItem>
                         <SelectItem value="plot">Plots/Land</SelectItem>
                     </SelectContent>
                 </Select>
@@ -213,6 +227,7 @@ const ListingForm = () => {
                             setCustomBhk(true);
                         } else {
                             setCustomBhk(false);
+                            handleFormValueChange('bhk', value);
                         }
                     }}
                 >
@@ -260,6 +275,7 @@ const ListingForm = () => {
                     className="startup-form_input" 
                     required 
                     placeholder="Enter carpet area in sq.ft"
+                    onChange={(e) => handleFormValueChange('sqft', e.target.value)}
                 /> 
                 {errors.sqft && <p className="startup-form_error">{errors.sqft}</p>}
             </div>
@@ -268,7 +284,12 @@ const ListingForm = () => {
                 <label htmlFor="furnishing" className="startup-form_label">
                     Furnishing Status
                 </label>
-                <Select name="furnishing" required defaultValue="">
+                <Select 
+                    name="furnishing" 
+                    required 
+                    defaultValue=""
+                    onValueChange={(value) => handleFormValueChange('furnishing', value)}
+                >
                     <SelectTrigger className="startup-form_input">
                         <SelectValue placeholder="Select furnishing status" />
                     </SelectTrigger>
@@ -293,6 +314,7 @@ const ListingForm = () => {
                             min="1"
                             className="startup-form_input" 
                             required 
+                            onChange={(e) => handleFormValueChange('bedrooms', e.target.value)}
                         />
                     </div>
                     <div>
@@ -304,6 +326,7 @@ const ListingForm = () => {
                             min="1"
                             className="startup-form_input" 
                             required 
+                            onChange={(e) => handleFormValueChange('bathrooms', e.target.value)}
                         />
                     </div>
                     <div>
@@ -336,14 +359,21 @@ const ListingForm = () => {
                 <label htmlFor="price" className="startup-form_label">
                     {category === "rent" ? "Monthly Rent (₹)" : "Price (₹)"}
                 </label>
-                <Input 
-                    id="price" 
-                    name="price" 
-                    type="number"
-                    className="startup-form_input" 
-                    required 
-                    placeholder={category === "rent" ? "Enter monthly rent" : "Enter property price"}
-                /> 
+                <div className="flex gap-2">
+                    <Input 
+                        id="price" 
+                        name="price" 
+                        type="number"
+                        className="startup-form_input" 
+                        required 
+                        placeholder={category === "rent" ? "Enter monthly rent" : "Enter property price"}
+                    /> 
+                    <PricePrediction 
+                        category={category} 
+                        formValues={formValues}
+                        location={location}
+                    />
+                </div>
                 {errors.price && <p className="startup-form_error">{errors.price}</p>}
             </div>
 
