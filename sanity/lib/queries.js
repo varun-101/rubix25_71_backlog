@@ -17,6 +17,7 @@ export const LISTINGS_QUERY = defineQuery(`
         description, 
         bhk,
         sqft,
+        isSold,
         views
     }
 `)
@@ -104,6 +105,7 @@ export const LISTINGS_BY_USER = defineQuery(`
         description, 
         bhk,
         sqft,
+        isSold,
         views
     }
 `)

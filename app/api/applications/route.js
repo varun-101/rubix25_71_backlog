@@ -13,14 +13,22 @@ export async function POST(req) {
                 message: "You must be logged in to apply" 
             }, { status: 401 });
         }
-
+        
         const { listingId, message, phone, occupation, moveInDate } = await req.json();
+
+        console.log(listingId, message, phone, occupation, moveInDate);
 
         // Validate required fields
         if (!listingId || !phone || !occupation || !moveInDate) {
             return Response.json({ 
                 success: false, 
-                message: "Missing required fields" 
+                message: "Missing required fields",
+                details: {
+                    listingId: !listingId ? "Listing ID is required" : null,
+                    phone: !phone ? "Phone number is required" : null,
+                    occupation: !occupation ? "Occupation is required" : null,
+                    moveInDate: !moveInDate ? "Move-in date is required" : null
+                }
             }, { status: 400 });
         }
 
@@ -32,6 +40,8 @@ export async function POST(req) {
                 userId: session.user._id
             }
         );
+
+        // console.log(existingApplication);
 
         if (existingApplication) {
             return Response.json({ 
@@ -55,7 +65,7 @@ export async function POST(req) {
             message: message || '',
             phone,
             occupation,
-            moveInDate,
+            moveInDate: new Date(moveInDate).toISOString(),
             _createdAt: new Date().toISOString()
         };
 
@@ -75,7 +85,8 @@ export async function POST(req) {
         console.error('Error submitting application:', error);
         return Response.json({ 
             success: false, 
-            message: "Failed to submit application" 
+            message: "Failed to submit application",
+            error: error.message
         }, { status: 500 });
     }
 }

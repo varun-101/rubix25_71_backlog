@@ -28,13 +28,15 @@ const ApplicationForm = ({ listingId, userId }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    listingId,
+                    listingId: listingId,
                     message: formData.get('message'),
                     phone: formData.get('phone'),
                     occupation: formData.get('occupation'),
                     moveInDate: formData.get('moveInDate')
                 }),
             });
+
+            console.log(response);
 
             if (!response.ok) throw new Error();
 
@@ -45,6 +47,7 @@ const ApplicationForm = ({ listingId, userId }) => {
 
             router.refresh();
         } catch (error) {
+            console.log(error);
             toast({
                 title: "Error",
                 description: "Failed to submit application. Please try again.",
