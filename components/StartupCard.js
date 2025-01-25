@@ -15,6 +15,7 @@ import {
 
 const StartupCard = async ({ post }) => {
     const posts = await post;
+    console.log(posts.images);
 
     return (
         <li className="startup-card group">
@@ -65,12 +66,12 @@ const StartupCard = async ({ post }) => {
 
             <Carousel>
                 <CarouselContent>
-                    {posts.images.map((image, index) => (
+                    {posts.images?.map((image, index) => (
                         <CarouselItem key={index}>
                             <div className="relative aspect-video w-full">
                                 <Image 
                                     src={image} 
-                                    alt="placeholder" 
+                                    alt={`Property image ${index + 1}`}
                                     fill
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     className="rounded-2xl object-cover" 

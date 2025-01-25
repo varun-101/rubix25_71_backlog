@@ -1,3 +1,5 @@
+import { defineType, defineField } from "sanity";
+
 export const application = defineType({
     name: "application",
     title: "Application",
@@ -34,11 +36,6 @@ export const application = defineType({
             name: 'message',
             title: 'Message',
             type: 'text'
-        },
-        {
-            name: '_createdAt',
-            title: 'Applied Date',
-            type: 'datetime'
         }
     ]
 })

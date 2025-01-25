@@ -37,6 +37,32 @@ const ListingForm = () => {
 
     const handleFormSubmit = async (prevState, formData) => {
         try {
+            // First, upload all images to Sanity
+            const imageAssets = await Promise.all(
+                selectedImages.map(async (file) => {
+                    const imageData = new FormData();
+                    imageData.append('file', file);
+                    
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: imageData
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to upload image');
+                    }
+                    
+                    const data = await response.json();
+                    return {
+                        _type: 'image',
+                        asset: {
+                            _type: 'reference',
+                            _ref: data.assetId
+                        }
+                    };
+                })
+            );
+
             const formValues = {
                 title: formData.get("title"),
                 description: formData.get("description"),
@@ -51,9 +77,9 @@ const ListingForm = () => {
                     parking: formData.get("parking")
                 },
                 price: formData.get("price"),
-                images: selectedImages,
+                image: imageAssets,  // Use the uploaded image assets
                 location: location
-            }
+            };
 
             if (formData.get("category") === "rent") {
                 formValues.deposit = formData.get("deposit");

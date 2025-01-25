@@ -39,10 +39,15 @@ export const listing = defineType({
             type: "number",
         }),
         defineField({
-            name: "images",
+            name: "image",
             title: "Images",
             type: "array",
-            of: [{ type: 'image' }],
+            of: [{
+                type: 'image',
+                options: {
+                    hotspot: true // Enables the image hotspot feature
+                }
+            }],
             validation: Rule => Rule.required().min(2).max(10)
         }),
         defineField({
@@ -55,6 +60,17 @@ export const listing = defineType({
             name: "sqft",
             title: "Area (sq.ft)",
             type: "number",
+        }),
+        defineField({
+            name: "pricePrediction",
+            title: "Price Prediction",
+            type: "number",
+        }),
+        defineField({
+            name: "isSold",
+            title: "Is Sold",
+            initialValue: false,
+            type: "boolean",
         }),
         defineField({
             name: "description",

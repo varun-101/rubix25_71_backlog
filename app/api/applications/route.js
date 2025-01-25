@@ -125,6 +125,9 @@ export async function PATCH(req) {
             .set({ status })
             .commit();
 
+        // Update the listing document
+        await writeClient.patch(application.listing._id).set({ isSold: true }).commit();
+
         // Revalidate the applications page
         revalidatePath(`/listing/${application.listing._id}/applications`);
 

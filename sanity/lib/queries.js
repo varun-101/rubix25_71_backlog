@@ -1,7 +1,7 @@
 import { defineQuery } from "next-sanity";
 
 export const LISTINGS_QUERY = defineQuery(`
-    *[_type=='listing' && category == $category && ($query == null || (title match $query || description match $query || address.city match $query || address.state match $query || address.country match $query || address.pincode match $query || address.street match $query ))] | order(views desc){
+    *[_type=='listing' && category == $category && isSold != true && ($query == null || (title match $query || description match $query || address.city match $query || address.state match $query || address.country match $query || address.pincode match $query || address.street match $query ))] | order(views desc){
         _id, 
         _createdAt, 
         price, 
@@ -13,7 +13,7 @@ export const LISTINGS_QUERY = defineQuery(`
         },
         category, 
         deposit, 
-        "images": image[].asset->url, 
+        "images": image[].asset->url,
         description, 
         bhk,
         sqft,
@@ -44,7 +44,7 @@ export const LISTING_BY_ID = defineQuery(`
         },
         category, 
         deposit, 
-        "images": image[].asset->url, 
+        "images": image[].asset->url,
         description, 
         bhk,
         sqft,
@@ -53,32 +53,17 @@ export const LISTING_BY_ID = defineQuery(`
         configuration,
         nearbyPlaces,
         furnishing,
-        "reviews": *[_type == "review" && references(^._id)]{
+        location,
+        address,
+        reviews[] {
             _id,
             rating,
             review,
             _createdAt,
-            "user": user->{
-                _id,
-                name,
-                image
-            }
-        },
-        location {
-            lat,
-            lng
-        },
-        address {
-            street,
-            city,
-            state,
-            country,
-            pincode
+            user->
         }
-
     }
 `)
-
 
 export const VIEW_COUNT = defineQuery(`
     *[_type=='listing' && _id == $id][0]{
@@ -115,7 +100,7 @@ export const LISTINGS_BY_USER = defineQuery(`
         },
         category, 
         deposit, 
-        "images": image[].asset->url, 
+        "images": image[].asset->url,
         description, 
         bhk,
         sqft,
