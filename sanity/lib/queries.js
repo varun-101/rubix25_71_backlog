@@ -110,5 +110,40 @@ export const LISTINGS_BY_USER = defineQuery(`
     }
 `)
 
+export const SEARCH_LISTINGS = defineQuery(`
+    *[_type=='listing' && isSold != true && 
+      ($type == "all" || category == $type) &&
+      ($query == "" || 
+        title match $query || 
+        description match $query || 
+        address.city match $query || 
+        address.state match $query || 
+        address.street match $query ||
+        address.pincode match $query
+      ) &&
+      ($minPrice == null || price >= $minPrice) &&
+      ($maxPrice == null || price <= $maxPrice) &&
+      ($bhk == null || bhk == $bhk) &&
+      ($city == null || address.city match $city)
+    ] | order(views desc) {
+        _id,
+        _createdAt,
+        title,
+        price,
+        category,
+        bhk,
+        sqft,
+        views,
+        "images": image[].asset->url,
+        description,
+        address,
+        user->{
+            _id,
+            name,
+            image
+        }
+    }
+`)
+
 
 
