@@ -33,25 +33,26 @@ export async function POST(req) {
             }, { status: 400 });
         }
 
-        // Create review document
-        const reviewDoc = {
-            _type: 'review',
-            listing: {
-                _type: 'reference',
-                _ref: listingId
-            },
+        // Create review object matching the schema structure
+        const reviewObject = {
+            _key: `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             user: {
                 _type: 'reference',
                 _ref: session.user._id
             },
             rating: Number(rating),
             review: review || '',
+            createdAt: new Date().toISOString()
         };
 
-        // Create the review in Sanity
-        const result = await writeClient.create(reviewDoc);
+        // Add review to the listing's reviews array
+        const result = await writeClient
+            .patch(listingId)
+            .setIfMissing({reviews: []})
+            .append('reviews', [reviewObject])
+            .commit();
 
-        // Revalidate the listing page to show the new review
+        // Revalidate the listing page
         revalidatePath(`/listing/${listingId}`);
 
         return Response.json({ 
@@ -82,23 +83,26 @@ export async function GET(req) {
             }, { status: 400 });
         }
 
-        const query = `*[_type == "review" && listing._ref == $listingId] {
-            _id,
-            rating,
-            review,
-            _createdAt,
-            "user": user->{
-                _id,
-                name,
-                image
+        // Query that matches the schema structure
+        const query = `*[_type == "listing" && _id == $listingId][0] {
+            "reviews": reviews[] {
+                _key,
+                rating,
+                review,
+                createdAt,
+                "user": user->{
+                    _id,
+                    name,
+                    image
+                }
             }
-        } | order(_createdAt desc)`;
+        }`;
 
-        const reviews = await writeClient.fetch(query, { listingId });
+        const result = await writeClient.fetch(query, { listingId });
 
         return Response.json({ 
             success: true, 
-            data: reviews 
+            data: result?.reviews || [] 
         });
 
     } catch (error) {
@@ -110,7 +114,7 @@ export async function GET(req) {
     }
 }
 
-// Delete a review (optional - for user's own reviews)
+// Delete a review
 export async function DELETE(req) {
     try {
         const session = await auth();
@@ -123,36 +127,43 @@ export async function DELETE(req) {
         }
 
         const { searchParams } = new URL(req.url);
-        const reviewId = searchParams.get('id');
+        const listingId = searchParams.get('listingId');
+        const reviewKey = searchParams.get('reviewKey');
 
-        if (!reviewId) {
+        if (!listingId || !reviewKey) {
             return Response.json({ 
                 success: false, 
-                message: "Review ID is required" 
+                message: "Listing ID and Review Key are required" 
             }, { status: 400 });
         }
 
         // Check if the review belongs to the user
-        const review = await writeClient.fetch(
-            `*[_type == "review" && _id == $reviewId && user._ref == $userId][0]`,
+        const listing = await writeClient.fetch(
+            `*[_type == "listing" && _id == $listingId][0] {
+                reviews[_key == $reviewKey && user._ref == $userId][0]
+            }`,
             { 
-                reviewId,
-                userId: session.user.id
+                listingId,
+                reviewKey,
+                userId: session.user._id
             }
         );
 
-        if (!review) {
+        if (!listing?.reviews) {
             return Response.json({ 
                 success: false, 
                 message: "Review not found or unauthorized" 
             }, { status: 404 });
         }
 
-        // Delete the review
-        await writeClient.delete(reviewId);
+        // Remove the review from the array
+        const result = await writeClient
+            .patch(listingId)
+            .unset([`reviews[_key=="${reviewKey}"]`])
+            .commit();
 
         // Revalidate the listing page
-        revalidatePath(`/listing/${review.listing._ref}`);
+        revalidatePath(`/listing/${listingId}`);
 
         return Response.json({ 
             success: true, 
