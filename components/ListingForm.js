@@ -63,6 +63,7 @@ const ListingForm = () => {
                 })
             );
 
+            // Prepare form values with the uploaded images
             const formValues = {
                 title: formData.get("title"),
                 description: formData.get("description"),
@@ -104,25 +105,13 @@ const ListingForm = () => {
             return result;
             
         } catch (error) {
-            if(error instanceof z.ZodError){
-                const fieldErrors = error.flatten().fieldErrors
-                setErrors(fieldErrors)
-                toast({
-                    title:"Error",
-                    description:"Please Check your input and try again",
-                    variant: 'destructive'
-                })
-                return { ...prevState, error:"Validation Failed", status:"ERROR"}
-            }
-            console.log(error);
-            
+            console.error("Form submission error:", error);
             toast({
-                title:"Error",
-                description:"Unexpected Error",
-                variant: 'destructive'
-            })
-            return { ...prevState, error:"Unexpected Error", status:"ERROR"}
-
+                title: "Error",
+                description: error.message || "Failed to create listing",
+                variant: "destructive"
+            });
+            return { ...prevState, error: error.message, status: "ERROR" };
         }
     }
 
