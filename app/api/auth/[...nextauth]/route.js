@@ -12,7 +12,7 @@ const authOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
     ],
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.AUTH_SECRET,
     callbacks: {
         async signIn({ user, account, profile }) {
             if (!profile) return false;
@@ -63,6 +63,8 @@ const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
+// console.log(process.env.AUTH_SECRET);
+
 
 export async function auth() {
     return await getServerSession(authOptions);
